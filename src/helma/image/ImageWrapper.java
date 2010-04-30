@@ -9,9 +9,9 @@
  * Copyright 1998-2003 Helma Software. All Rights Reserved.
  *
  * $RCSfile$
- * $Author$
- * $Revision$
- * $Date$
+ * $Author: lehni $
+ * $Revision: 9848 $
+ * $Date: 2009-08-10 15:28:10 +0100 (Mon, 10 Aug 2009) $
  */
 
 /*
@@ -362,15 +362,18 @@ public class ImageWrapper {
     * @param trimRight
     * @param trimBottom
     */
-   public void trim(int x, int y, boolean trimLeft, boolean trimTop, boolean trimRight, boolean trimBottom) {
+    public void trim(int x, int y, boolean trimLeft, boolean trimTop,
+            boolean trimRight, boolean trimBottom) {
         BufferedImage bi = this.getBufferedImage();
         int color = bi.getRGB(x, y);
         int left = 0, top = 0, right = width - 1, bottom = height - 1;
 
-        // create a BufferedImage of only 1 pixel height for fetching the rows of the image in the correct format (ARGB)
-        // This speeds up things by more than factor 2, compared to the standard BufferedImage.getRGB solution,
-        // which is supposed to be fast too. This is probably the case because drawing to BufferedImages uses 
-        // very optimized code which may even be hardware accelerated.
+        // Create a BufferedImage of only 1 pixel height for fetching the rows
+        // of the image in the correct format (ARGB) This speeds up things by
+        // more than factor 2, compared to the standard BufferedImage.getRGB
+        // solution, which is supposed to be fast too. This is probably the case
+        // because drawing to BufferedImages uses very optimized code which may
+        // even be hardware accelerated.
         if (trimTop || trimBottom) {
             BufferedImage row = new BufferedImage(width, 1, BufferedImage.TYPE_INT_ARGB);
             Graphics2D g2d = row.createGraphics();
@@ -450,7 +453,8 @@ public class ImageWrapper {
      * Resizes the image using the Graphics2D approach
      */
     protected void resize(int w, int h, boolean smooth) {
-        BufferedImage buffered = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage buffered = new BufferedImage(w, h,
+                BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = buffered.createGraphics();
 
         g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, 
@@ -467,6 +471,7 @@ public class ImageWrapper {
             (double) w / width,
             (double) h / height
         );
+        g2d.setComposite(AlphaComposite.Src);
         g2d.drawImage(image, at, null);
         g2d.dispose();
         setImage(buffered);
@@ -491,7 +496,8 @@ public class ImageWrapper {
             // Area averaging has the best results for shrinking of images:
 
             // As getScaledInstance is asynchronous, the ImageWaiter is needed here too:
-            // Image scaled = ImageWaiter.waitForImage(image.getScaledInstance(w, h, Image.SCALE_AREA_AVERAGING));
+            // Image scaled = ImageWaiter.waitForImage(image.getScaledInstance(w, h,
+            //         Image.SCALE_AREA_AVERAGING));
             // if (scaled == null)
             //     throw new RuntimeException("Image cannot be resized.");
             
