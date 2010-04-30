@@ -7,3 +7,7 @@ docs/
 dist/
 classes/
 launcher.jar
+.project
+.classpath
+.metadata/
+.settings/
