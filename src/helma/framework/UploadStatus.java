@@ -9,9 +9,9 @@
  * Copyright 2007 Helma Software. All Rights Reserved.
  *
  * $RCSfile$
- * $Author: root $
- * $Revision: 8604 $
- * $Date: 2007-09-28 15:16:38 +0200 (Fri, 28 Sep 2007) $
+ * $Author$
+ * $Revision$
+ * $Date$
  */
 
 package helma.framework;

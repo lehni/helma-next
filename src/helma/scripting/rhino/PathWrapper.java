@@ -9,9 +9,9 @@
  * Copyright 1998-2003 Helma Software. All Rights Reserved.
  *
  * $RCSfile$
- * $Author: lehni $
- * $Revision: 9849 $
- * $Date: 2009-08-12 13:02:06 +0200 (Wed, 12 Aug 2009) $
+ * $Author$
+ * $Revision$
+ * $Date$
  */
 
 package helma.scripting.rhino;

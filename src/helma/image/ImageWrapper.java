@@ -9,9 +9,9 @@
  * Copyright 1998-2003 Helma Software. All Rights Reserved.
  *
  * $RCSfile$
- * $Author: lehni $
- * $Revision: 9848 $
- * $Date: 2009-08-10 15:28:10 +0100 (Mon, 10 Aug 2009) $
+ * $Author$
+ * $Revision$
+ * $Date$
  */
 
 /*

@@ -9,9 +9,9 @@
  * Copyright 1998-2003 Helma Software. All Rights Reserved.
  *
  * $RCSfile$
- * $Author: hannes $
- * $Revision: 9994 $
- * $Date: 2009-11-25 10:33:28 +0100 (Wed, 25 Nov 2009) $
+ * $Author$
+ * $Revision$
+ * $Date$
  */
 
 package helma.objectmodel.db;

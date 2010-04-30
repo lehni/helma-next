@@ -9,9 +9,9 @@
  * Copyright 1998-2003 Helma Software. All Rights Reserved.
  *
  * $RCSfile$
- * $Author: lehni $
- * $Revision: 9626 $
- * $Date: 2009-04-17 16:49:26 +0200 (Fri, 17 Apr 2009) $
+ * $Author$
+ * $Revision$
+ * $Date$
  */
 
 package helma.scripting.rhino.observer;
