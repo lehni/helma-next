@@ -9,9 +9,9 @@
  * Copyright 1998-2003 Helma Software. All Rights Reserved.
  *
  * $RCSfile$
- * $Author$
- * $Revision$
- * $Date$
+ * $Author: hannes $
+ * $Revision: 9975 $
+ * $Date: 2009-09-29 14:51:26 +0100 (Tue, 29 Sep 2009) $
  */
 
 package helma.framework;
@@ -687,7 +687,7 @@ public class RequestTrans implements Serializable {
                     return value instanceof Cookie ? value : null;
                 } else if (value instanceof Object[]) {
                     Object[] values = ((Object[]) value);
-                    return values.length > 0 ? values[0] : null;
+                    return values.length > 0 ? values[values.length - 1] : null;
                 } else if (value instanceof Cookie) {
                     Cookie cookie = (Cookie) value;
                     return cookie.getValue();
