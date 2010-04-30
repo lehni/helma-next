@@ -9,9 +9,9 @@
  * Copyright 1998-2003 Helma Software. All Rights Reserved.
  *
  * $RCSfile$
- * $Author$
- * $Revision$
- * $Date$
+ * $Author: root $
+ * $Revision: 8604 $
+ * $Date: 2007-09-28 14:16:38 +0100 (Fri, 28 Sep 2007) $
  */
 
 package helma.scripting.rhino.extensions;
@@ -24,6 +24,7 @@ import java.awt.image.*;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.FunctionObject;
+import org.mozilla.javascript.ScriptRuntime;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.NativeJavaObject;
@@ -94,8 +95,6 @@ public class ImageObject {
                     img = generator.createImage(((MimePart) arg).getContent());
                 } else if (arg instanceof File) {
                     img = generator.createImage(((File) arg).getAbsolutePath());
-                } else if (arg instanceof FileObject) {
-                    img = generator.createImage(((FileObject) arg).getFile().getAbsolutePath());
                 } else if (arg instanceof InputStream) {
                     img = generator.createImage((InputStream) arg);
                 } else {
@@ -109,6 +108,14 @@ public class ImageObject {
                     }
                     if (image != null) {
                         img = new ImageWrapper(image, image.getWidth(null), image.getHeight(null), generator);
+                    } else {
+                        // if we have still not managed to produce an image, convert the passed object
+                        // to a string and see if it is a file path. 
+                        // Use ScriptRuntime.toString so getDefaultValue is used for Scriptables.
+                        // This is to allow native JS based File objects to work transparently with ImageObject.
+                        File file = new File(ScriptRuntime.toString(arg));
+                        if (file.exists())
+                            img = generator.createImage(file.getAbsolutePath());
                     }
                 }
             } else if (args.length == 2) {
@@ -174,21 +181,23 @@ public class ImageObject {
                     in = new ByteArrayInputStream(((MimePart) arg).getContent());
                 } else if (arg instanceof File) {
                     in = new FileInputStream((File) arg);
-                } else if (arg instanceof FileObject) {
-                    in = new FileInputStream(((FileObject)arg).getFile());
-                } else if (arg instanceof String) {
-                    String str = (String) arg;
-                    // try to interpret argument as URL if it contains a colon,
+                } else {
+                    // If we have still not managed to produce an image, convert the passed object
+                    // to a string and see if it is a file path.
+                    String path = ScriptRuntime.toString(arg);
+                    // Try to interpret argument as URL if it contains a colon,
                     // otherwise or if URL is malformed interpret as file name.
-                    if (str.indexOf(":") > -1) {
+                    if (path != null && path.indexOf(":") > -1) {
                         try {
-                            URL url = new URL(str);
+                            URL url = new URL(path);
                             in = url.openStream();
                         } catch (MalformedURLException mux) {
-                            in = new FileInputStream(str);
                         }
-                    } else {
-                        in = new FileInputStream(str);
+                    }
+                    if (in == null) {
+                        File file = new File(path);
+                        if (file.exists())
+                            in = new FileInputStream(file);
                     }
                 }
     
