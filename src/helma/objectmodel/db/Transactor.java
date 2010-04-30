@@ -9,15 +9,18 @@
  * Copyright 1998-2003 Helma Software. All Rights Reserved.
  *
  * $RCSfile$
- * $Author$
- * $Revision$
- * $Date$
+ * $Author: hannes $
+ * $Revision: 10004 $
+ * $Date: 2009-12-17 11:55:26 +0100 (Thu, 17 Dec 2009) $
  */
 
 package helma.objectmodel.db;
 
+import helma.framework.core.RequestEvaluator;
 import helma.objectmodel.DatabaseException;
 import helma.objectmodel.ITransaction;
+import helma.scripting.ScriptingEngine;
+import helma.scripting.ScriptingException;
 
 import java.sql.Connection;
 import java.sql.Statement;
@@ -304,6 +307,17 @@ public class Transactor {
         } else if (!active) {
             return;
         }
+
+        ScriptingEngine engine = nmgr.app.getCurrentRequestEvaluator().getScriptingEngine();
+
+        try {
+            // call onBeforeCommit, if defined
+            engine.invoke(null, "onBeforeCommit", RequestEvaluator.EMPTY_ARGS,
+                    ScriptingEngine.ARGS_WRAP_DEFAULT, false);
+        } catch (ScriptingException e) {
+            nmgr.app.logError("Error in onBeforeCommit", e);
+        }
+
         int inserted = 0;
         int updated = 0;
         int deleted = 0;
@@ -314,8 +328,10 @@ public class Transactor {
         ArrayList modifiedParentNodes = null;
         // if nodemanager has listeners collect dirty nodes
         boolean hasListeners = nmgr.hasNodeChangeListeners();
+        boolean hasOnCommit = engine.hasFunction(null, "onCommit", false);
+        boolean collectNodes = hasListeners || hasOnCommit;
 
-        if (hasListeners) {
+        if (collectNodes) {
             insertedNodes = new ArrayList();
             updatedNodes = new ArrayList();
             deletedNodes = new ArrayList();
@@ -343,7 +359,7 @@ public class Transactor {
                     // register node with nodemanager cache
                     nmgr.registerNode(node);
 
-                    if (hasListeners) {
+                    if (collectNodes) {
                         insertedNodes.add(node);
                     }
 
@@ -362,7 +378,7 @@ public class Transactor {
                     // update node with nodemanager cache
                     nmgr.registerNode(node);
 
-                    if (hasListeners) {
+                    if (collectNodes) {
                         updatedNodes.add(node);
                     }
 
@@ -378,7 +394,7 @@ public class Transactor {
                     // remove node from nodemanager cache
                     nmgr.evictNode(node);
 
-                    if (hasListeners) {
+                    if (collectNodes) {
                         deletedNodes.add(node);
                     }
 
@@ -409,7 +425,7 @@ public class Transactor {
             for (Iterator i = parentNodes.iterator(); i.hasNext(); ) {
                 Node node = (Node) i.next();
                 node.markSubnodesChanged();
-                if (hasListeners) {
+                if (collectNodes) {
                     modifiedParentNodes.add(node);
                 }
             }
@@ -425,7 +441,28 @@ public class Transactor {
 
         if (active) {
             active = false;
+            // call onCommit if defined, passing inserted, updated, deleted and
+            // parents to it
+            if (hasOnCommit) {
+                try {
+                    engine.invoke(null, "onCommit", new Object[] {
+                            insertedNodes.toArray(),
+                            updatedNodes.toArray(),
+                            deletedNodes.toArray(),
+                            modifiedParentNodes.toArray()
+                    }, ScriptingEngine.ARGS_WRAP_DEFAULT, false);
+                } catch (ScriptingException e) {
+                    nmgr.app.logError("Error in onCommit", e);
+                }
+            }
             nmgr.db.commitTransaction(txn);
+            // call onAfterCommit, if defined
+            try {
+                engine.invoke(null, "onAfterCommit", RequestEvaluator.EMPTY_ARGS,
+                        ScriptingEngine.ARGS_WRAP_DEFAULT, false);
+            } catch (ScriptingException e) {
+                nmgr.app.logError("Error in onAfterCommit", e);
+            }
             txn = null;
         }
 
