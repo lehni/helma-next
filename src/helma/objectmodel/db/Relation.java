@@ -9,9 +9,9 @@
  * Copyright 1998-2003 Helma Software. All Rights Reserved.
  *
  * $RCSfile$
- * $Author$
- * $Revision$
- * $Date$
+ * $Author: hannes $
+ * $Revision: 9992 $
+ * $Date: 2009-11-24 11:34:50 +0100 (Tue, 24 Nov 2009) $
  */
 
 package helma.objectmodel.db;
@@ -1253,14 +1253,16 @@ public final class Relation {
                                             : nonvirtual;
                 String value = null;
 
-                if (cnst.localKeyIsPrimary(home.getDbMapping())) {
-                    value = home.getID();
-                } else if (cnst.localKeyIsPrototype()) {
-                    value = home.getDbMapping().getStorageTypeName();
-                } else if (ownType.isRelational()) {
-                    value = home.getString(cnst.localProperty());
-                } else {
-                    value = home.getString(cnst.localKey);
+                if (home != null) {
+                    if (cnst.localKeyIsPrimary(home.getDbMapping())) {
+                        value = home.getID();
+                    } else if (cnst.localKeyIsPrototype()) {
+                        value = home.getDbMapping().getStorageTypeName();
+                    } else if (ownType.isRelational()) {
+                        value = home.getString(cnst.localProperty());
+                    } else {
+                        value = home.getString(cnst.localKey);
+                    }
                 }
 
                 count++;
