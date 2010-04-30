@@ -6,18 +6,22 @@
 
 # uncomment to set JAVA_HOME variable
 # JAVA_HOME=/usr/lib/java
+JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Versions/1.5/Home/
 
 # uncomment to set HOP_HOME, otherwise we get it from the script path
 # HOP_HOME=/usr/local/helma
+HOP_HOME=/Users/lehni/Development/Helma/helma
 
 # options to pass to the Java virtual machine
 # JAVA_OPTIONS="-server -Xmx128m"
+JAVA_OPTIONS="-server -Xmx256m -Dfile.encoding=UTF-8"
+#JAVA_OPTIONS="-server -Xmx256m -Xdebug -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=8001,server=y,suspend=n"
 
 # Set TCP ports for Helma servers
 # (comment/uncomment to de/activate)
 HTTP_PORT=8080
 # XMLRPC_PORT=8081
-# AJP13_PORT=8009
+AJP13_PORT=8009
 # RMI_PORT=5050
 
 ###########################################################
@@ -71,8 +75,8 @@ if [ "$RMI_PORT" ]; then
    echo Starting RMI server on port $RMI_PORT
 fi
 if [ "$HOP_HOME" ]; then
-   SWITCHES="$SWITCHES -h $HOP_HOME"
+   SWITCHES="$SWITCHES -i $HOP_HOME -h $HOP_HOME"
 fi
 
 # Invoke the Java VM
-$JAVACMD $JAVA_OPTIONS -jar "$INSTALL_DIR/launcher.jar" $SWITCHES $*
+exec $JAVACMD $JAVA_OPTIONS -jar "$INSTALL_DIR/launcher.jar" $SWITCHES $*
