@@ -9,9 +9,9 @@
  * Copyright 1998-2003 Helma Software. All Rights Reserved.
  *
  * $RCSfile$
- * $Author$
- * $Revision$
- * $Date$
+ * $Author: lehni $
+ * $Revision: 9849 $
+ * $Date: 2009-08-12 13:02:06 +0200 (Wed, 12 Aug 2009) $
  */
 
 package helma.scripting.rhino;
@@ -35,7 +35,7 @@ public class PathWrapper extends ScriptableObject {
     /**
      * Zero arg constructor for creating the PathWrapper prototype.
      */
-    public PathWrapper (RhinoCore core) throws PropertyException, NoSuchMethodException {
+    public PathWrapper (RhinoCore core) throws NoSuchMethodException {
         this.core = core;
         // create a dummy path object
         this.path = new RequestPath(core.app);
