@@ -1,0 +1,9 @@
+apps.properties
+lib/ext/
+lib/deactivated/
+lib/helma*.jar
+build/externals/
+docs/
+dist/
+classes/
+launcher.jar
