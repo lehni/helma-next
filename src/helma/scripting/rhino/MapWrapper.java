@@ -9,9 +9,9 @@
  * Copyright 1998-2003 Helma Software. All Rights Reserved.
  *
  * $RCSfile$
- * $Author$
- * $Revision$
- * $Date$
+ * $Author: root $
+ * $Revision: 8604 $
+ * $Date: 2007-09-28 15:16:38 +0200 (Fri, 28 Sep 2007) $
  */
 
 package helma.scripting.rhino;
@@ -101,7 +101,11 @@ public class MapWrapper extends ScriptableObject implements Wrapper {
             return Context.toObject(obj, core.global);
         }
 
-        return obj;
+        if (obj != null)
+            return obj;
+        if (map.containsKey(name))
+            return null;
+        return Scriptable.NOT_FOUND;
     }
 
     /**
@@ -161,7 +165,8 @@ public class MapWrapper extends ScriptableObject implements Wrapper {
             return null;
         }
 
-        Object obj = map.get(Integer.toString(idx));
+        String name = Integer.toString(idx);
+        Object obj = map.get(name);
 
         if (obj != null && !(obj instanceof Scriptable)) {
             // do NOT wrap primitives - otherwise they'll be wrapped as Objects,
@@ -175,7 +180,11 @@ public class MapWrapper extends ScriptableObject implements Wrapper {
             return Context.toObject(obj, core.global);
         }
 
-        return obj;
+        if (obj != null)
+            return obj;
+        if (map.containsKey(name))
+            return null;
+        return Scriptable.NOT_FOUND;
     }
 
     /**
