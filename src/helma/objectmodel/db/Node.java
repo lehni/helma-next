@@ -9,9 +9,9 @@
  * Copyright 1998-2003 Helma Software. All Rights Reserved.
  *
  * $RCSfile$
- * $Author$
- * $Revision$
- * $Date$
+ * $Author: hannes $
+ * $Revision: 9994 $
+ * $Date: 2009-11-25 10:33:28 +0100 (Wed, 25 Nov 2009) $
  */
 
 package helma.objectmodel.db;
@@ -222,6 +222,8 @@ public final class Node implements INode {
             throw new ConcurrencyException("Tried to modify " + this +
                                            " from two threads at the same time.");
         }
+        /*
+        */
 
         tx.visitDirtyNode(this);
         lock = tx;
@@ -1664,12 +1666,12 @@ public final class Node implements INode {
      */
     public String getString(String propname) {
         Property prop = getProperty(propname);
-
-        try {
-            return prop.getStringValue();
-        } catch (Exception ignore) {
+        if (prop != null) {
+            try {
+                return prop.getStringValue();
+            } catch (Exception ignore) {
+            }
         }
-
         return null;
     }
 
@@ -1682,12 +1684,12 @@ public final class Node implements INode {
      */
     public long getInteger(String propname) {
         Property prop = getProperty(propname);
-
-        try {
-            return prop.getIntegerValue();
-        } catch (Exception ignore) {
+        if (prop != null) {
+            try {
+                return prop.getIntegerValue();
+            } catch (Exception ignore) {
+            }
         }
-
         return 0;
     }
 
@@ -1700,12 +1702,12 @@ public final class Node implements INode {
      */
     public double getFloat(String propname) {
         Property prop = getProperty(propname);
-
-        try {
-            return prop.getFloatValue();
-        } catch (Exception ignore) {
+        if (prop != null) {
+            try {
+                return prop.getFloatValue();
+            } catch (Exception ignore) {
+            }
         }
-
         return 0.0;
     }
 
@@ -1718,12 +1720,12 @@ public final class Node implements INode {
      */
     public Date getDate(String propname) {
         Property prop = getProperty(propname);
-
-        try {
-            return prop.getDateValue();
-        } catch (Exception ignore) {
+        if (prop != null) {
+            try {
+                return prop.getDateValue();
+            } catch (Exception ignore) {
+            }
         }
-
         return null;
     }
 
@@ -1736,12 +1738,12 @@ public final class Node implements INode {
      */
     public boolean getBoolean(String propname) {
         Property prop = getProperty(propname);
-
-        try {
-            return prop.getBooleanValue();
-        } catch (Exception ignore) {
+        if (prop != null) {
+            try {
+                return prop.getBooleanValue();
+            } catch (Exception ignore) {
+            }
         }
-
         return false;
     }
 
@@ -1754,12 +1756,12 @@ public final class Node implements INode {
      */
     public INode getNode(String propname) {
         Property prop = getProperty(propname);
-
-        try {
-            return prop.getNodeValue();
-        } catch (Exception ignore) {
+        if (prop != null) {
+            try {
+                return prop.getNodeValue();
+            } catch (Exception ignore) {
+            }
         }
-
         return null;
     }
 
@@ -1772,12 +1774,12 @@ public final class Node implements INode {
      */
     public Object getJavaObject(String propname) {
         Property prop = getProperty(propname);
-
-        try {
-            return prop.getJavaObjectValue();
-        } catch (Exception ignore) {
+        if (prop != null) {
+            try {
+                return prop.getJavaObjectValue();
+            } catch (Exception ignore) {
+            }
         }
-
         return null;
     }
 
