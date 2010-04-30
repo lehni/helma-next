@@ -33,13 +33,15 @@ import org.mozilla.javascript.FunctionObject;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Undefined;
+import org.mozilla.javascript.Wrapper;
+
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 
 /**
   * An EcmaScript FileIO 'File' object
   */
-public class FileObject extends ScriptableObject {
+public class FileObject extends ScriptableObject implements Wrapper {
     File file = null;
     Object readerWriter = null;
     boolean atEOF = false;
@@ -49,16 +51,18 @@ public class FileObject extends ScriptableObject {
     protected FileObject() {
     }
 
-    protected FileObject(String fileName) {
+    protected FileObject(File file) {
         // always convert to absolute file straight away, since
         // relative file name handling is pretty broken in java.io.File
-        file = new File(fileName).getAbsoluteFile();
+        this.file = file.getAbsoluteFile();
+    }
+
+    protected FileObject(String fileName) {
+        this(new File(fileName));
     }
 
     protected FileObject(String pathName, String fileName) {
-        // always convert to absolute file straight away, since
-        // relative file name handling is pretty broken in java.io.File
-        file = new File(pathName, fileName).getAbsoluteFile();
+        this(new File(pathName, fileName));
     }
 
     public static FileObject fileObjCtor(Context cx, Object[] args,
@@ -66,10 +70,18 @@ public class FileObject extends ScriptableObject {
         if (args.length == 0 || args[0] == Undefined.instance) {
             throw new IllegalArgumentException("File constructor called without argument");
         }
-        if (args.length < 2 || args[1] == Undefined.instance) {
-            return new FileObject(args[0].toString());
+        Object arg0 = args[0];
+        if (arg0 instanceof Wrapper) {
+            arg0 = ((Wrapper) arg0).unwrap();
         }
-        return new FileObject(args[0].toString(), args[1].toString());
+        if (args.length < 2 || args[1] == Undefined.instance) {
+            return new FileObject(arg0.toString());
+        }
+        Object arg1 = args[1];
+        if (arg1 instanceof Wrapper) {
+            arg1 = ((Wrapper) arg1).unwrap();
+        }
+        return new FileObject(arg0.toString(), arg1.toString());
     }
 
     public static void init(Scriptable scope) {
@@ -499,9 +511,8 @@ public class FileObject extends ScriptableObject {
        }
     }
 
-    protected File getFile() {
+    public Object unwrap() {
         return file;
     }
-  
 } //class FileObject
 
