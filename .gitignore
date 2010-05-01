@@ -1,4 +1,4 @@
-apps.properties
+server.properties
 lib/ext/
 lib/deactivated/
 lib/helma*.jar
@@ -11,3 +11,5 @@ launcher.jar
 .classpath
 .metadata/
 .settings/
+db/
+log/
