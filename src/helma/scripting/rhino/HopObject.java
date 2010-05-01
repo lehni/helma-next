@@ -708,7 +708,7 @@ public class HopObject extends ScriptableObject implements Wrapper, PropertyReco
     public int jsFunction_contains(Object obj) {
         return jsFunction_indexOf(obj);
     }
-    
+
     /**
      * Set a property in this HopObject
      *
@@ -723,24 +723,9 @@ public class HopObject extends ScriptableObject implements Wrapper, PropertyReco
             if ("constructor".equals(name) && value instanceof NativeFunction) {
                 name = "__constructor__";
             }
+            propertyChanged(name, value, null, null);
             // register property for PropertyRecorder interface
-            if (isRecording) {
-                changedProperties.add(name);
-                if (value instanceof Function) {
-                    // reset function's parent scope, needed because of the way we compile
-                    // prototype code, using the prototype objects as scope
-                    Scriptable scriptable = (Scriptable) value;
-                    while (scriptable != null) {
-                        Scriptable scope = scriptable.getParentScope();
-                        if (scope == this) {
-                            scriptable.setParentScope(core.global);
-                            break;
-                        }
-                        scriptable = scope;
-                    }
-                }
-            }
-            super.put(name, start, value);
+           super.put(name, start, value);
         } else if (super.has(name, start)) {
             // if property is defined as ScriptableObject slot
             // (e.g. via __defineGetter__/__defineSetter__)
@@ -785,6 +770,52 @@ public class HopObject extends ScriptableObject implements Wrapper, PropertyReco
                 node.setNode(name, (INode) value);
             } else {
                 node.setJavaObject(name, value);
+            }
+        }
+    }
+
+    public void defineOwnProperty(Context cx, Object id, PropertyDescriptor desc) {
+        if (desc.isDataDescriptor()) {
+            Object value = desc.getValue();
+            if ("constructor".equals(id) && value instanceof NativeFunction) {
+                id = "__constructor__";
+            }
+            propertyChanged(id, value, null, null);
+        } else if (desc.isAccessorDescriptor()) {
+            propertyChanged(id, null,
+                    desc.getGetter(), desc.getSetter());
+        }
+        super.defineOwnProperty(cx, id, desc);
+    }
+
+    protected void propertyChanged(Object id, Object value, Object get,
+            Object set) {
+        if (isRecording) {
+            changedProperties.add(id.toString());
+        }
+        if (value != null)
+            correctScope(value);
+        if (get != null)
+            correctScope(get);
+        if (set != null)
+            correctScope(set);
+    }
+
+    protected void correctScope(Object object) {
+        if (object instanceof Function) {
+            // reset function's parent scope, needed because of the way we compile
+            // prototype code, using the prototype objects as scope
+            Scriptable scriptable = (Scriptable) object;
+            while (scriptable != null) {
+                Scriptable scope = scriptable.getParentScope();
+                // do not just support switching of this HopObject prototype to
+                // global, but all prototypes, e.g. when compiling into 
+                // another prototype from one prototype folder (bad practise!)
+                if (scope instanceof HopObject) {
+                    scriptable.setParentScope(core.global);
+                    break;
+                }
+                scriptable = scope;
             }
         }
     }

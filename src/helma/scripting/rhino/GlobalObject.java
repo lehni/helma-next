@@ -17,11 +17,13 @@
 package helma.scripting.rhino;
 
 import helma.scripting.rhino.extensions.*;
+import helma.scripting.rhino.observer.ObjectObserver;
 import helma.framework.core.*;
 import helma.objectmodel.db.*;
 import helma.util.HtmlEncoder;
 import helma.util.MimePart;
 import helma.util.XmlUtils;
+
 import org.mozilla.javascript.*;
 import org.mozilla.javascript.serialize.*;
 import org.xml.sax.SAXException;
@@ -73,7 +75,8 @@ public class GlobalObject extends ImporterTopLevel implements PropertyRecorder {
                                    "getXmlDocument", "getHtmlDocument", "seal",
                                    "getDBConnection", "getURL", "write", "writeln",
                                    "serialize", "deserialize", "defineLibraryScope",
-                                   "wrapJavaMap", "unwrapJavaMap", "toJava", "definePrototype"
+                                   "wrapJavaMap", "unwrapJavaMap", "toJava", "definePrototype",
+                                   "createObserver"
                                };
 
         defineFunctionProperties(globalFuncs, GlobalObject.class, DONTENUM | PERMANENT);
@@ -117,6 +120,22 @@ public class GlobalObject extends ImporterTopLevel implements PropertyRecorder {
         }
         super.put(name, start, value);
     }
+
+    public void defineOwnProperty(Context cx, Object id, PropertyDescriptor desc) {
+        // register property for PropertyRecorder interface
+        if (isRecording) {
+            // if during compilation a property is set on the thread scope
+            // forward it to the shared scope (bug 504)
+            if (isThreadScope) {
+                core.global.defineOwnProperty(cx, id, desc);
+                return;
+            } else {
+                changedProperties.add(id.toString());
+            }
+        }
+        super.defineOwnProperty(cx, id, desc);
+    }
+
 
     /**
      * Override ScriptableObject.get() to use the per-thread scope if possible,
@@ -424,6 +443,13 @@ public class GlobalObject extends ImporterTopLevel implements PropertyRecorder {
         }
         obj = ((MapWrapper) obj).unwrap();
         return new NativeJavaObject(core.global, obj, Map.class);
+    }
+
+    public static Object createObserver(Context cx, Scriptable thisObj,
+            Object[] args, Function funObj) {
+        if (args[1] instanceof Callable)
+            return ObjectObserver.create(args[0], null, (Callable) args[1]);
+        return null;
     }
 
     /**
