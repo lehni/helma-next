@@ -42,7 +42,7 @@ public class Main {
                                             "mail.jar", "activation.jar",
                                             "commons-fileupload.jar", "commons-codec.jar",
                                             "commons-io.jar", "commons-net.jar", 
-                                            "tagsoup.jar"
+                                            "tagsoup.jar", "debugger.jar"
                                         };
 
     private Class serverClass;

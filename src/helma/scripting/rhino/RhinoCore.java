@@ -17,7 +17,6 @@
 package helma.scripting.rhino;
 
 import helma.scripting.rhino.extensions.*;
-import helma.scripting.rhino.debug.HelmaDebugger;
 import helma.framework.core.*;
 import helma.framework.repository.Resource;
 import helma.objectmodel.*;
@@ -25,6 +24,8 @@ import helma.objectmodel.db.DbMapping;
 import helma.objectmodel.db.NodeHandle;
 import helma.scripting.*;
 import helma.util.*;
+
+import org.eclipse.wst.jsdt.debug.rhino.debugger.RhinoDebugger;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextAction;
 import org.mozilla.javascript.ContextFactory;
@@ -56,7 +57,7 @@ public final class RhinoCore implements ScopeProvider {
     // the application we're running in
     public final Application app;
 
-    // our context factory
+    // our context factor
     ContextFactory contextFactory;
 
     // the global object
@@ -84,7 +85,7 @@ public final class RhinoCore implements ScopeProvider {
     String globalError;
 
     // the debugger, if active
-    HelmaDebugger debugger = null;
+    RhinoDebugger debugger = null;
 
     // optimization level for rhino engine, ranges from -1 to 9
     int optLevel = 0;
@@ -94,6 +95,7 @@ public final class RhinoCore implements ScopeProvider {
     
     // debugger/tracer flags
     boolean hasDebugger = false;
+    String debuggerSettings;
     boolean hasTracer = false;
     boolean hasProfiler = false;
     private boolean isInitialized = false;
@@ -119,7 +121,10 @@ public final class RhinoCore implements ScopeProvider {
      */
     protected synchronized void initialize() {
 
-        hasDebugger = "true".equalsIgnoreCase(app.getProperty("rhino.debug"));
+    	String debug = app.getProperty("rhino.debug");
+        hasDebugger = !"false".equalsIgnoreCase(debug);
+        if (hasDebugger)
+        	debuggerSettings = debug;
         hasTracer = "true".equalsIgnoreCase(app.getProperty("rhino.trace"));
         hasProfiler = "true".equalsIgnoreCase(app.getProperty("rhino.profile"));
 
@@ -209,7 +214,11 @@ public final class RhinoCore implements ScopeProvider {
 
     public void shutdown() {
         if (debugger != null) {
-            debugger.dispose();
+            try {
+				debugger.stop();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
             debugger = null;
         }
     }
@@ -218,9 +227,9 @@ public final class RhinoCore implements ScopeProvider {
         context.setGeneratingDebug(true);
         try {
             if (debugger == null) {
-                debugger = new HelmaDebugger(app.getName());
-                debugger.setScopeProvider(this);
-                debugger.attachTo(contextFactory);
+                debugger = new RhinoDebugger(debuggerSettings);
+				debugger.start();
+				contextFactory.addListener(debugger);
             }
         } catch (Exception x) {
             app.logError("Error setting up debugger", x);
