@@ -122,7 +122,7 @@ public final class RhinoCore implements ScopeProvider {
     protected synchronized void initialize() {
 
     	String debug = app.getProperty("rhino.debug");
-        hasDebugger = !"false".equalsIgnoreCase(debug);
+        hasDebugger = debug != null && !"false".equalsIgnoreCase(debug);
         if (hasDebugger)
         	debuggerSettings = debug;
         hasTracer = "true".equalsIgnoreCase(app.getProperty("rhino.trace"));
@@ -215,6 +215,7 @@ public final class RhinoCore implements ScopeProvider {
     public void shutdown() {
         if (debugger != null) {
             try {
+            	contextFactory.removeListener(debugger);
 				debugger.stop();
 			} catch (Exception e) {
 				e.printStackTrace();
