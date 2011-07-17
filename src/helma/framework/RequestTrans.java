@@ -137,7 +137,10 @@ public class RequestTrans implements Serializable {
             setETags(header);
         }
 
-        header = request.getRemoteAddr();
+        header = request.getHeader("X-Real-IP");
+        if (header == null) {
+        	header = request.getRemoteAddr();
+        }
         if (header != null) {
             values.put("http_remotehost", header);
         }
