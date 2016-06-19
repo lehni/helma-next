@@ -34,17 +34,6 @@ import java.util.ArrayList;
  *  be able to set up class and install paths.
  */
 public class Main {
-    public static final String[] jars = {
-                                            "helma.jar", "rhino.jar", "jetty.jar",
-                                            "jetty-util.jar", "jetty-ajp.jar",
-                                            "commons-logging.jar", "crimson.jar",
-                                            "xmlrpc.jar", "servlet.jar",
-                                            "mail.jar", "activation.jar",
-                                            "commons-fileupload.jar", "commons-codec.jar",
-                                            "commons-io.jar", "commons-net.jar", 
-                                            "tagsoup.jar", "debugger.jar"
-                                        };
-
     private Class serverClass;
     private Object server;
 
@@ -121,6 +110,22 @@ public class Main {
         }
     }
 
+    static void addJars(ArrayList jarlist, File dir) throws MalformedURLException {
+        File[] files = dir.listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                String n = name.toLowerCase();
+                return n.endsWith(".jar") || n.endsWith(".zip");
+            }
+        });
+
+        if (files != null) {
+            for (int i = 0; i < files.length; i++) {
+                jarlist.add(new URL("file:" + files[i].getAbsolutePath()));
+                System.err.println("Adding to classpath: " + files[i].getAbsolutePath());
+            }
+        }
+    }
+
     /**
      * Create a server-wide ClassLoader from our install directory. 
      * This will be used as parent ClassLoader for all application 
@@ -140,26 +145,10 @@ public class Main {
         File libdir = new File(installDir, "lib");
         ArrayList jarlist = new ArrayList();
 
-        for (int i = 0; i < jars.length; i++) {
-            File jar = new File(libdir, jars[i]);
-            jarlist.add(new URL("file:" + jar.getAbsolutePath()));
-        }
-
+        // add all jar files from the lib directory
+        addJars(jarlist, libdir);
         // add all jar files from the lib/ext directory
-        File extdir = new File(libdir, "ext");
-        File[] files = extdir.listFiles(new FilenameFilter() {
-                public boolean accept(File dir, String name) {
-                    String n = name.toLowerCase();
-                    return n.endsWith(".jar") || n.endsWith(".zip");
-                }
-            });
-
-        if (files != null) {
-            for (int i = 0; i < files.length; i++) {
-                jarlist.add(new URL("file:" + files[i].getAbsolutePath()));
-                System.err.println("Adding to classpath: " + files[i].getAbsolutePath());
-            }
-        }
+        addJars(jarlist, new File(libdir, "ext"));
 
         URL[] urls = new URL[jarlist.size()];
 

@@ -18,20 +18,20 @@ package helma.main;
 
 import helma.framework.core.*;
 import helma.framework.repository.Repository;
+import helma.servlet.EmbeddedServletClient;
 import helma.framework.repository.FileRepository;
 import helma.util.StringUtils;
 import org.apache.xmlrpc.XmlRpcHandler;
 import org.apache.commons.logging.Log;
-import org.mortbay.jetty.handler.ContextHandler;
-import org.mortbay.jetty.handler.ContextHandlerCollection;
-import org.mortbay.jetty.handler.ResourceHandler;
-import org.mortbay.jetty.servlet.ServletHandler;
-import org.mortbay.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.ContextHandlerCollection;
+import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 
 import java.io.*;
 import java.util.*;
 import helma.util.ResourceProperties;
-import helma.servlet.EmbeddedServletClient;
 
 /**
  * This class is responsible for starting and stopping Helma applications.
@@ -502,12 +502,12 @@ public class ApplicationManager implements XmlRpcHandler {
                     
                     appContext = context.addContext(pathPattern, "");
 
-                    ServletHandler handler = new ServletHandler();
+                    ServletContextHandler handler = new ServletContextHandler();
                     Class servletClass = servletClassName == null ?
                             EmbeddedServletClient.class : Class.forName(servletClassName);
 
                     ServletHolder holder = new ServletHolder(servletClass);
-                    handler.addServletWithMapping(holder, "/*");
+                    handler.addServlet(holder, "/*");
 
                     holder.setInitParameter("application", appName);
                     // holder.setInitParameter("mountpoint", mountpoint);

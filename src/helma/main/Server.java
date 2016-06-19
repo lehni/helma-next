@@ -598,6 +598,9 @@ public class Server implements Runnable {
             logger.error("Error setting security manager", x);
         }
 
+        // start applications
+        appManager.startAll();
+
         // start embedded web server
         if (jetty != null) {
             try {
@@ -606,9 +609,6 @@ public class Server implements Runnable {
                 throw new RuntimeException("Error starting embedded web server", m);
             }
         }
-
-        // start applications
-        appManager.startAll();
 
         while (Thread.currentThread() == mainThread) {
             try {

@@ -6,7 +6,7 @@
 
 # uncomment to set JAVA_HOME variable
 # JAVA_HOME=/usr/lib/java
-JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Versions/1.5/Home/
+JAVA_HOME=`/usr/libexec/java_home`
 
 # uncomment to set HOP_HOME, otherwise we get it from the script path
 # HOP_HOME=/usr/local/helma
@@ -14,7 +14,7 @@ HOP_HOME=/Users/lehni/Development/Helma/helma
 
 # options to pass to the Java virtual machine
 # JAVA_OPTIONS="-server -Xmx128m"
-JAVA_OPTIONS="-server -Xmx256m -Dfile.encoding=UTF-8"
+JAVA_OPTIONS="-server -Xmx512m -Dfile.encoding=UTF-8"
 #JAVA_OPTIONS="-server -Xmx256m -Xdebug -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=8001,server=y,suspend=n"
 
 # Set TCP ports for Helma servers
