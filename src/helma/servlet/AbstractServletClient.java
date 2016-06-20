@@ -22,6 +22,8 @@ package helma.servlet;
 import helma.framework.*;
 import helma.framework.core.Application;
 import helma.util.*;
+import helma.util.Base64;
+
 import java.io.*;
 import java.util.*;
 import java.security.SecureRandom;

@@ -19,6 +19,7 @@ package helma.framework;
 import helma.framework.core.Skin;
 import helma.framework.core.Application;
 import helma.util.*;
+import helma.util.Base64;
 import helma.scripting.ScriptingException;
 
 import javax.servlet.http.HttpServletResponse;
