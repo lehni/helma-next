@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="lib/activation.jar"/>
+	<classpathentry kind="lib" path="lib/apache-dom.jar"/>
+	<classpathentry kind="lib" path="lib/commons-codec.jar"/>
+	<classpathentry kind="lib" path="lib/commons-fileupload.jar"/>
+	<classpathentry kind="lib" path="lib/commons-io.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging.jar"/>
+	<classpathentry kind="lib" path="lib/commons-net.jar"/>
+	<classpathentry kind="lib" path="lib/ext/batik-awt-util.jar"/>
+	<classpathentry kind="lib" path="lib/ext/batik-bridge.jar"/>
+	<classpathentry kind="lib" path="lib/ext/batik-dom.jar"/>
+	<classpathentry kind="lib" path="lib/ext/batik-ext.jar"/>
+	<classpathentry kind="lib" path="lib/ext/batik-gvt.jar"/>
+	<classpathentry kind="lib" path="lib/ext/batik-parser.jar"/>
+	<classpathentry kind="lib" path="lib/ext/batik-svg-dom.jar"/>
+	<classpathentry kind="lib" path="lib/ext/batik-svggen.jar"/>
+	<classpathentry kind="lib" path="lib/ext/batik-transcoder.jar"/>
+	<classpathentry kind="lib" path="lib/ext/batik-util.jar"/>
+	<classpathentry kind="lib" path="lib/ext/batik-xml.jar"/>
+	<classpathentry kind="lib" path="lib/ext/commons-httpclient-2.0.jar"/>
+	<classpathentry kind="lib" path="lib/ext/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/ext/htmlparser.jar"/>
+	<classpathentry kind="lib" path="lib/ext/jaxen-1.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/ext/jpedal-full.jar"/>
+	<classpathentry kind="lib" path="lib/ext/jxl.jar"/>
+	<classpathentry kind="lib" path="lib/ext/Saferpay.jar"/>
+	<classpathentry kind="lib" path="lib/ext/tagsoup-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/ext/vglib.jar"/>
+	<classpathentry kind="lib" path="lib/ext/xbean_xpath.jar"/>
+	<classpathentry kind="lib" path="lib/ext/xbean.jar"/>
+	<classpathentry kind="lib" path="lib/mail.jar"/>
+	<classpathentry kind="lib" path="lib/rhino.jar" sourcepath="/rhino"/>
+	<classpathentry kind="lib" path="lib/tagsoup.jar"/>
+	<classpathentry kind="lib" path="lib/xmlrpc.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/debugger.jar"/>
+	<classpathentry kind="lib" path="lib/jetty-ajp.jar"/>
+	<classpathentry kind="lib" path="lib/jetty-util.jar"/>
+	<classpathentry kind="lib" path="lib/jetty.jar"/>
+	<classpathentry kind="lib" path="lib/servlet.jar"/>
+	<classpathentry kind="output" path="classes"/>
+</classpath>
