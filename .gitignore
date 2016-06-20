@@ -1,16 +1,11 @@
 server.properties
 lib/ext/
 lib/deactivated/
-lib/helma*.jar
+lib/helma-*.jar
 build/externals/
 docs/
 dist/
 classes/
-launcher.jar
-.project
-.classpath
-.metadata/
-.settings/
 db/
 log/
 files/
